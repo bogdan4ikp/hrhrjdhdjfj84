@@ -1,0 +1,6 @@
+{
+  "name": "LumenOS",
+  "description": "LumenOS allows full lock screen customization blending iOS with Material You, complete with diverse clock styles, dynamic capsules, customizable widgets, and premium glassmorphism layouts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
