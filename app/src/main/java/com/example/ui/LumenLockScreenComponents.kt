@@ -73,8 +73,8 @@ fun LiveWallpaper(
         listOf(Color(0xFF0F172A), Color(0xFF1E1B4B), Color(0xFF581C87), Color(0xFF86198F)),
         // Nothing OS Obsidian Slate
         listOf(Color(0xFF0B0F19), Color(0xFF1E293B), Color(0xFF0F172A), Color(0xFF020617)),
-        // Material You Pastel Aurora
-        listOf(Color(0xFFFFEDD5), Color(0xFFFEF3C7), Color(0xFFFEF08A), Color(0xFFFDE047)),
+        // [REFIMAGE MATCH] Tropical Turquoise Lagoon (Beautiful Sand Gold and Oceanic Blue-Teal Gradient)
+        listOf(Color(0xFF0F4C5C), Color(0xFF00A5CF), Color(0xFF25A18E), Color(0xFF9FFFCB), Color(0xFFFEF08A)),
         // HyperOS Mint Glow
         listOf(Color(0xFF064E3B), Color(0xFF022C22), Color(0xFF111827), Color(0xFF0F172A)),
         // Cosmic Violet Glow
@@ -216,15 +216,15 @@ fun LockScreenClock(
             val now = Date()
             timeString = SimpleDateFormat("HH:mm", Locale.getDefault()).format(now)
             secondsString = SimpleDateFormat("ss", Locale.getDefault()).format(now)
-            dateString = SimpleDateFormat("EEEE, d MMMM", Locale.getDefault()).format(now)
+            dateString = SimpleDateFormat("EEE MMM d", Locale.US).format(now) // [REFIMAGE MATCH] e.g. "Thu Jun 26"
             kotlinx.coroutines.delay(1000)
         }
     }
 
     if (timeString.isEmpty()) {
-        timeString = "12:00"
+        timeString = "12:49"
         secondsString = "00"
-        dateString = "Thursday, 21 May"
+        dateString = "Thu Jun 26"
     }
 
     // Modern typography options
@@ -274,17 +274,37 @@ fun LockScreenClock(
             .padding(horizontal = 24.dp),
         horizontalAlignment = align
     ) {
+        // [REFIMAGE MATCH] Premium date on top of clock with nice bold/letterspaced uppercase layout
+        Text(
+            text = dateString,
+            style = TextStyle(
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = chosenFont,
+                letterSpacing = 1.2.sp,
+                color = if (isAod) Color.Gray else Color.White.copy(alpha = 0.95f),
+                shadow = Shadow(
+                    color = Color.Black.copy(alpha = 0.4f),
+                    offset = Offset(0f, 2f),
+                    blurRadius = 6f
+                )
+            ),
+            textAlign = textAlignment
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+
         // Render different Clock Typography Modes
         when (config.clockStyle) {
             "MINIMAL" -> {
-                // Highly minimalist ultra-thin styling
+                // Highly minimalist ultra-thin styling - taller and elongated for iOS feel
                 Text(
                     text = timeString,
                     style = TextStyle(
-                        fontSize = (84 * config.clockSize).sp,
+                        fontSize = (92 * config.clockSize).sp,
                         fontWeight = FontWeight.ExtraLight,
                         fontFamily = chosenFont,
                         color = clockColor,
+                        letterSpacing = (-1.5).sp,
                         shadow = Shadow(
                             color = Color.Black.copy(alpha = 0.3f),
                             offset = Offset(0f, 4f),
@@ -300,10 +320,11 @@ fun LockScreenClock(
                 Text(
                     text = timeString,
                     style = TextStyle(
-                        fontSize = (92 * config.clockSize).sp,
-                        fontWeight = FontWeight.Black,
+                        fontSize = (96 * config.clockSize).sp,
+                        fontWeight = FontWeight.ExtraBold,
                         fontFamily = chosenFont,
                         color = clockColor,
+                        letterSpacing = (-2).sp,
                         shadow = Shadow(
                             color = Color.Black.copy(alpha = 0.4f),
                             offset = Offset(0f, 6f),
@@ -320,7 +341,7 @@ fun LockScreenClock(
                     Text(
                         text = timeString,
                         style = TextStyle(
-                            fontSize = (88 * config.clockSize).sp,
+                            fontSize = (92 * config.clockSize).sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = chosenFont,
                             color = clockColor,
@@ -344,28 +365,28 @@ fun LockScreenClock(
                 // Oversized stacked hours and minutes layout matching iOS style
                 val parts = timeString.split(":")
                 val hr = parts.getOrNull(0) ?: "12"
-                val min = parts.getOrNull(1) ?: "00"
+                val min = parts.getOrNull(1) ?: "49"
 
                 Column(horizontalAlignment = align) {
                     Text(
                         text = hr,
                         style = TextStyle(
-                            fontSize = (76 * config.clockSize).sp,
+                            fontSize = (80 * config.clockSize).sp,
                             fontWeight = FontWeight.ExtraBold,
                             fontFamily = chosenFont,
                             color = clockColor,
-                            lineHeight = (72 * config.clockSize).sp
+                            lineHeight = (74 * config.clockSize).sp
                         ),
                         textAlign = textAlignment
                     )
                     Text(
                         text = min,
                         style = TextStyle(
-                            fontSize = (76 * config.clockSize).sp,
+                            fontSize = (80 * config.clockSize).sp,
                             fontWeight = FontWeight.ExtraBold,
                             fontFamily = chosenFont,
                             color = clockColor,
-                            lineHeight = (72 * config.clockSize).sp
+                            lineHeight = (74 * config.clockSize).sp
                         ),
                         textAlign = textAlignment
                     )
@@ -392,24 +413,6 @@ fun LockScreenClock(
                 )
             }
         }
-
-        // Subtitle Date label
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = dateString,
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = chosenFont,
-                color = if (isAod) Color.LightGray else Color.White.copy(alpha = 0.8f),
-                shadow = Shadow(
-                    color = Color.Black.copy(alpha = 0.3f),
-                    offset = Offset(0f, 2f),
-                    blurRadius = 4f
-                )
-            ),
-            textAlign = textAlignment
-        )
     }
 }
 
@@ -766,12 +769,12 @@ fun LockScreenWidgets(
                         Icon(
                             imageVector = Icons.Default.CloudQueue,
                             contentDescription = "Weather",
-                            tint = Color(0xFF60A5FA),
+                            tint = Color(0xFF38BDF8),
                             modifier = Modifier.size(20.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
                         Column {
-                            Text("Weather", color = Color.White.copy(alpha = 0.5f), fontSize = 10.sp)
+                            Text("WEATHER", color = Color.White.copy(alpha = 0.5f), fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
                             Text("+21°C • Облачно", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                         }
                     }
@@ -784,11 +787,11 @@ fun LockScreenWidgets(
                             imageVector = Icons.Default.CalendarToday,
                             contentDescription = "Events",
                             tint = Color(0xFFF87171),
-                            modifier = Modifier.size(17.dp)
+                            modifier = Modifier.size(16.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
                         Column {
-                            Text("Events", color = Color.White.copy(alpha = 0.5f), fontSize = 10.sp)
+                            Text("CALENDAR", color = Color.White.copy(alpha = 0.5f), fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
                             Text("12:00 Tech Review", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                         }
                     }
@@ -797,16 +800,23 @@ fun LockScreenWidgets(
             if (config.widgetBatteryEnabled) {
                 add { mod ->
                     Row(modifier = mod, verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.BatteryChargingFull,
-                            contentDescription = "Battery",
-                            tint = Color(0xFF34D399),
-                            modifier = Modifier.size(19.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Box(modifier = Modifier.size(20.dp).padding(1.dp)) {
+                            Canvas(modifier = Modifier.fillMaxSize()) {
+                                drawCircle(color = Color.White.copy(alpha = 0.15f), style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx()))
+                                drawArc(
+                                    color = Color(0xFF34D399),
+                                    startAngle = -90f,
+                                    sweepAngle = 312f,
+                                    useCenter = false,
+                                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx(), cap = androidx.compose.ui.graphics.StrokeCap.Round)
+                                )
+                            }
+                            Icon(Icons.Default.BatteryChargingFull, null, tint = Color(0xFF34D399), modifier = Modifier.size(10.dp).align(Alignment.Center))
+                        }
+                        Spacer(modifier = Modifier.width(6.dp))
                         Column {
-                            Text("Battery", color = Color.White.copy(alpha = 0.5f), fontSize = 10.sp)
-                            Text("87% • Optimized", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                            Text("BATTERY", color = Color.White.copy(alpha = 0.5f), fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+                            Text("87% • Optimized", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -820,9 +830,9 @@ fun LockScreenWidgets(
                             tint = Color(0xFFC084FC),
                             modifier = Modifier.size(20.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
                         Column {
-                            Text(currentTrackArtist, color = Color.White.copy(alpha = 0.5f), fontSize = 10.sp, maxLines = 1)
+                            Text(currentTrackArtist, color = Color.White.copy(alpha = 0.5f), fontSize = 8.sp, maxLines = 1)
                             Text(currentTrackTitle, color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
                         }
                     }
@@ -831,16 +841,24 @@ fun LockScreenWidgets(
             if (config.widgetStepsEnabled) {
                 add { mod ->
                     Row(modifier = mod, verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.DirectionsRun,
-                            contentDescription = "Steps",
-                            tint = Color(0xFFFB923C),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        // [REFIMAGE MATCH] Elegant Activity Circle Gauge styled ring
+                        Box(modifier = Modifier.size(20.dp).padding(1.dp)) {
+                            Canvas(modifier = Modifier.fillMaxSize()) {
+                                drawCircle(color = Color.White.copy(alpha = 0.15f), style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx()))
+                                drawArc(
+                                    color = Color(0xFFFB923C),
+                                    startAngle = -90f,
+                                    sweepAngle = 230f,
+                                    useCenter = false,
+                                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx(), cap = androidx.compose.ui.graphics.StrokeCap.Round)
+                                )
+                            }
+                            Icon(Icons.Default.DirectionsRun, null, tint = Color(0xFFFB923C), modifier = Modifier.size(10.dp).align(Alignment.Center))
+                        }
+                        Spacer(modifier = Modifier.width(6.dp))
                         Column {
-                            Text("Шаги", color = Color.White.copy(alpha = 0.5f), fontSize = 10.sp)
-                            Text("4 350 шагов", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                            Text("MOVE ACTIVITY", color = Color.White.copy(alpha = 0.5f), fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+                            Text("41 / 330 kCal", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -854,10 +872,10 @@ fun LockScreenWidgets(
                             tint = Color(0xFF22D3EE),
                             modifier = Modifier.size(18.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
                         Column {
-                            Text("Напоминания", color = Color.White.copy(alpha = 0.5f), fontSize = 10.sp)
-                            Text("3 задачи", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                            Text("REMINDERS", color = Color.White.copy(alpha = 0.5f), fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+                            Text("3 tasks today", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                         }
                     }
                 }
@@ -871,10 +889,10 @@ fun LockScreenWidgets(
                             tint = Color(0xFFF472B6),
                             modifier = Modifier.size(19.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
                         Column {
-                            Text("Будильник", color = Color.White.copy(alpha = 0.5f), fontSize = 10.sp)
-                            Text("07:00", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                            Text("ALARM", color = Color.White.copy(alpha = 0.5f), fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+                            Text("07:00 AM", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                         }
                     }
                 }

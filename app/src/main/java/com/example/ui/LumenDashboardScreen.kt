@@ -1721,6 +1721,7 @@ fun PhoneHardwareMockup(
     currentTrack: LockScreenViewModel.TrackInfo,
     touchPulses: List<LockScreenViewModel.TouchPulse>
 ) {
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .width(220.dp)
@@ -1744,6 +1745,67 @@ fun PhoneHardwareMockup(
                 touchPulses = touchPulses
             )
 
+            // Realistic status bar at the very top of mockup
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)
+                    .padding(horizontal = 14.dp, vertical = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Left side: Operator and network mode
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Google Fi",
+                        color = Color.White.copy(alpha = 0.85f),
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.SansSerif
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Icon(
+                        imageVector = Icons.Default.AirplanemodeActive,
+                        contentDescription = null,
+                        tint = Color.White.copy(alpha = 0.85f),
+                        modifier = Modifier.size(9.dp).rotate(45f)
+                    )
+                }
+                
+                // Right side: Signal, WI-FI, Battery icon
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(3.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.SignalCellular4Bar,
+                        contentDescription = null,
+                        tint = Color.White.copy(alpha = 0.85f),
+                        modifier = Modifier.size(9.dp)
+                    )
+                    Icon(
+                        imageVector = Icons.Default.Wifi,
+                        contentDescription = null,
+                        tint = Color.White.copy(alpha = 0.85f),
+                        modifier = Modifier.size(9.dp)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .width(15.dp)
+                            .height(8.dp)
+                            .border(0.5.dp, Color.White.copy(alpha = 0.7f), RoundedCornerShape(1.5.dp))
+                            .padding(0.7.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth(0.85f)
+                                .background(Color.White)
+                        )
+                    }
+                }
+            }
+
             // Absolute alignments layout
             Box(modifier = Modifier.fillMaxSize()) {
                 val alignVal = when (config.clockPosition) {
@@ -1752,7 +1814,7 @@ fun PhoneHardwareMockup(
                     else -> Alignment.BottomCenter
                 }
                 
-                val topPadding = if (config.clockPosition == "TOP") 70.dp else 24.dp
+                val topPadding = if (config.clockPosition == "TOP") 52.dp else 24.dp
                 val bottomPadding = if (config.clockPosition == "BOTTOM") 70.dp else 24.dp
 
                 // Relocatable Clock
@@ -1764,24 +1826,24 @@ fun PhoneHardwareMockup(
                         .padding(top = topPadding, bottom = bottomPadding)
                 )
 
-                // Top Smart Capsule
+                // Top Smart Capsule (Notch)
                 if (config.islandEnabled) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.TopCenter)
-                            .padding(top = 8.dp)
+                            .padding(top = 18.dp)
                     ) {
                         SmartCapsule(viewModel = viewModel, config = config)
                     }
                 }
 
-                // Bottom widgets layout grid
+                // Bottom widgets layout grid (sitting beautifully above quick actions)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = 20.dp)
+                        .padding(bottom = 82.dp)
                 ) {
                     LockScreenWidgets(
                         config = config,
@@ -1789,6 +1851,118 @@ fun PhoneHardwareMockup(
                         currentTrackTitle = currentTrack.title,
                         currentTrackArtist = currentTrack.artist
                     )
+                }
+
+                // Interactive iOS Actions, signature link, and Gesture Home/Pill at bottom
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 6.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        // Notifications capsule [👤 Personal | 32 Notifications]
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(14.dp))
+                                .background(Color.White.copy(alpha = 0.15f))
+                                .border(0.5.dp, Color.White.copy(alpha = 0.12f), RoundedCornerShape(14.dp))
+                                .padding(horizontal = 12.dp, vertical = 5.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = null,
+                                    tint = Color.White.copy(alpha = 0.95f),
+                                    modifier = Modifier.size(10.dp)
+                                )
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        text = "Personal",
+                                        color = Color.White.copy(alpha = 0.95f),
+                                        fontSize = 8.5.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = "32 Notifications",
+                                        color = Color.White.copy(alpha = 0.65f),
+                                        fontSize = 7.5.sp,
+                                        fontWeight = FontWeight.Normal
+                                    )
+                                }
+                            }
+                        }
+
+                        // Domain label signature [www.gotechtor.com]
+                        Text(
+                            text = "www.gotechtor.com",
+                            color = Color.White.copy(alpha = 0.45f),
+                            fontSize = 8.sp,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Light,
+                            letterSpacing = 0.5.sp
+                        )
+
+                        // White Gesture Pill Indicator
+                        Box(
+                            modifier = Modifier
+                                .width(54.dp)
+                                .height(3.dp)
+                                .clip(CircleShape)
+                                .background(Color.White.copy(alpha = 0.85f))
+                        )
+                    }
+
+                    // Flashlight circular action button (Bottom-Left)
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(start = 14.dp, bottom = 10.dp)
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black.copy(alpha = 0.45f))
+                            .border(0.5.dp, Color.White.copy(alpha = 0.15f), CircleShape)
+                            .clickable {
+                                Toast.makeText(context, "Фонарь включен!", Toast.LENGTH_SHORT).show()
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FlashlightOn,
+                            contentDescription = "Torch",
+                            tint = Color.White,
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
+
+                    // Camera circular action button (Bottom-Right)
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(end = 14.dp, bottom = 10.dp)
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black.copy(alpha = 0.45f))
+                            .border(0.5.dp, Color.White.copy(alpha = 0.15f), CircleShape)
+                            .clickable {
+                                Toast.makeText(context, "Камера активирована!", Toast.LENGTH_SHORT).show()
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PhotoCamera,
+                            contentDescription = "Camera",
+                            tint = Color.White,
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
                 }
             }
         } else {
